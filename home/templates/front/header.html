@@ -1,0 +1,56 @@
+{% load static %}
+{% get_static_prefix as STATIC_PREFIX %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    {% csrf_token %}
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>{{title}}</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+    <link rel='stylesheet' type='text/css' media='screen' href={% static 'css/main.css' %}>
+    <link rel='stylesheet' type='text/css' media='screen' href={% static 'lib/bootstrap-4.3.1-dist/css/bootstrap.min.css' %}>
+    <script src={% static 'lib/jquery-3.4.1/jquery-3.4.1.min.js' %} ></script>
+    <script src={% static 'lib/popper-js-1.16.0/popper.min.js' %} ></script>
+    <script src={% static 'lib/bootstrap-4.3.1-dist/js/bootstrap.min.js' %} ></script>
+    <script src={% static 'lib/bootstrap-4.3.1-dist/js/bootstrap.min.js' %} ></script>
+    <script src={% static 'js/JQTools.js' %} ></script>
+    
+</head>
+<body>
+    <header class="jumbotron"><img src={% static 'img/logo_tarnow_pl.svg' %} title="Tarnów" />
+        <h3>{{title}}</h3>
+        <p>UMT  {% now "Y" %} 
+            {% if user.is_authenticated %}
+                <a id="login-header-label" class="navbar-brand" disable="true" href="/logout/">Wyloguj: {{ user }}</a>
+            {% else %}
+                <a id="login-header-label" class="navbar-brand" href="/loginform/">Zaloguj się</a>
+            {% endif %}
+        </p>
+    </header>
+    <nav class="navbar bg-dark navbar-dark">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        {% if back %}            
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{{back}}">Powrót</a>
+            </div>
+        {% endif %}
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Strona główna</a>
+        </div>
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/admin">Strona administracyjna</a>
+        </div>		
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav">
+                {% for navigation in navigations %}
+                    <li class="nav-item">
+                        <a class="nav-link" title="{{navigation.describe}}" href="{{navigation.link}}">{{navigation.name}}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>  
+    </nav>

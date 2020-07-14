@@ -1,0 +1,15 @@
+
+{% include "front/header.html" with title=title navigations=navigations back=back %}
+<br/>
+<div class="container">
+    <div class="row">
+    {% for navigation in navigations %}
+        <div class="col-sm-4">
+            <h3><a class="nav-link" href="{{navigation.link}}">{{navigation.name}}</a></h3>
+            <p>{{navigation.describe}}</p>
+        </div>
+    {% endfor %}
+    <div>
+</div>
+<br/>
+{% include "front/footer.html" with navigations=navigations %}

@@ -1,0 +1,13 @@
+{% include "front/header.html" with title=title navigations=navigations back=back %}
+<br />
+<h5>{{title}}</h5>
+<form action="/login/" method="post" id="login-form">
+  {% csrf_token %}
+  <label for="id_username" class="required">Nazwa użytkownika:</label><br/>
+  <input id="id_username" type="text" name="username" maxlength="30"><br/>
+  <label for="id_password" class="required">Hasło:</label><br/>
+  <input id="id_password" type="password" name="password" maxlength="4096"><br/><br/>
+  <input type="hidden" name="redirectpage" value="{{redirectpage}}">
+  <input type="submit" value="Zaloguj się">
+</form>
+{% include "front/footer.html" with navigations=navigations %}

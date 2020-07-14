@@ -1,0 +1,33 @@
+{% include "front/header.html" with title=title navigations=navigations back=back %}
+<style>
+    @import "{{ STATIC_URL }}/tarnow_pl/css/main.css";
+</style>
+<div class="box">
+    <h3 class="title">Wklej skrypt:</h3>
+    <div>
+      <textarea id="scriptFromPage" ></textarea>
+      <button style="margin-top:10px" onclick="analizeScript()">ANALIZUJ</button>
+    </div>
+</div>
+<div class="box">
+    <h3 class="title">Elementy na sliderze</h3>
+</div>
+<div class="box">
+    <div id="slider-elements" class="slider-elements">
+    </div>	
+</div>
+<h3 class="title">Elementy do dodania</h3>
+<div>LINK: <input id="link-new-element" type="text">
+<img onclick="addElement()" title="Dodaj elementy" class="active plus" src="{{ STATIC_URL }}/tarnow_pl/img/plus.png" alt="Dodaj elementy"/></div>
+<div class="box">
+    <h3 class="title">Generuj kod HTML</h3>
+    <button onclick="generateXml()">GENERUJ KOD HTML</button><br />
+    
+    <h3 class="title">Wynik do skopiowania:</h3>
+    <div>
+      <textarea id="script-result" ></textarea>
+      <button style="margin-top:10px" onclick="coppyToClipboard()">KOPIUJ DO SCHOWKA</button>
+    </div>
+</div>
+<script src="{{ STATIC_URL }}/tarnow_pl/js/main.js" ></script>
+{% include "front/footer.html" with navigations=navigations %}

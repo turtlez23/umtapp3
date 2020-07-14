@@ -1,0 +1,10 @@
+{% include "front/header.html" with title=title navigations=navigations back=back %}
+<br/>
+<h1>Weryfikacja wniosku o dowód pliku XML</h1>
+<input id="file-input" type="file" />
+<div id="file-view"></div>
+<br/>
+<script src="{{ STATIC_URL }}epuap/js/main.js" ></script>
+{% include "front/footer.html" with navigations=navigations %}
+
+

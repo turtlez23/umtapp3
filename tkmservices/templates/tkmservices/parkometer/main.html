@@ -1,0 +1,114 @@
+{% include "front/header.html" with title=title navigations=navigations back=back %}
+{% load static %}
+
+<script src={% static 'js/reports/config.js' %} ></script>
+<script src={% static 'js/reports/ExportReports.js' %}></script>
+<script src={% static 'js/reports/Reports.js' %}></script>
+<script src={% static 'js/tkmservices/reports/impl/parkometer/PrkReports.js' %}></script>
+
+<div class="tab">
+    <button class="tablinks active" 
+        onclick="openTab(event, 'tab-prk_all')">
+        Salda transakcji z parkomatów
+    </button>
+    <button class="tablinks" 
+        onclick="openTab(event, 'tab-prk_all_devices')">
+        Salda transakcji z parkomatów dla poszczególnych urządzeń
+    </button>
+    <button class="tablinks" onclick="openTab(event, 'tab-count_prk_one')">Suma transakcji z pojedynczego parkomatu</button>
+    <button class="tablinks" onclick="openTab(event, 'tab-trans_prk_one')">Transakcje z pojedynczego parkomatu</button>
+</div>
+
+<div id="tab-prk_all" class="tabcontent" style="display: block;">
+    <p>Transakcje doladowan oraz sprzedazy biletow parkingowych w parkomacie</p>
+    <div>
+        <label for="start_date-prk_all">Data od:</label>
+        <input id="start_date-prk_all" type="date"/>
+        <label for="end_date-prk_all">Data do:</label>
+        <input id="end_date-prk_all" type="date"/>
+        <button id="btn-prk_all">Pobierz</button>
+    </div>
+    <div id="result-prk_all"></div>
+</div>
+
+<div id="tab-prk_all_devices" class="tabcontent">
+    <p>Transakcje doladowan oraz sprzedazy biletow parkingowych w parkomacie (Wyszczegolnione dla kazdego parkomatu)</p>
+    <div>
+        <label for="start_date-prk_all_devices">Data od:</label>
+        <input id="start_date-prk_all_devices" type="date"/>
+        <label for="end_date-prk_all_devices">Data do:</label>
+        <input id="end_date-prk_all_devices" type="date"/>
+        <button id="btn-prk_all_devices">Pobierz</button>
+    </div>
+    <div id="result-prk_all_devices"></div>
+</div>
+
+
+<div id="tab-count_prk_one" class="tabcontent">
+    <p>Suma transakcji dla pojedynczego parkomatu</p>
+    <label for="start_date-count_prk_one">Data od:</label>
+    <input id="start_date-count_prk_one" type="date"/>
+    <label for="end_date-count_prk_one">Data do:</label>
+    <input id="end_date-count_prk_one" type="date"/>
+    <label for="type_list-count_prk_one">Typ:</label>
+    <select id="type_list-count_prk_one"></select>
+    <label for="prk_list-count_prk_one">Parkomat:</label>
+    <select id="prk_list-count_prk_one"></select>
+    <button id="btn-count_prk_one">Pokaż sumę</button>
+    <div id="result-count_prk_one"></div>
+</div>
+
+
+<div id="tab-trans_prk_one" class="tabcontent">
+    <p>Transakcje dla pojedynczego parkomatu</p>
+    <label for="start_date-trans_prk_one">Data od:</label>
+    <input id="start_date-trans_prk_one" type="date"/>
+    <label for="end_date-trans_prk_one">Data do:</label>
+    <input id="end_date-trans_prk_one" type="date"/>
+    <label for="type_list-trans_prk_one">Typ:</label>
+    <select id="type_list-trans_prk_one"></select>
+    <label for="prk_list-trans_prk_one">Parkomat:</label>
+    <select id="prk_list-trans_prk_one"></select>
+    <button id="btn-trans_prk_one">Pokaż transakcje</button>
+    <div id="result-trans_prk_one"></div>
+</div>
+
+<script>
+    $(document).ready(init);
+    function init(){
+        $("#start_date-prk_all").val(getStartDefaultDate());
+        $("#end_date-prk_all").val(getEndDefaultDate());
+
+        $("#start_date-prk_all_devices").val(getStartDefaultDate());
+        $("#end_date-prk_all_devices").val(getEndDefaultDate());
+
+        $("#start_date-count_prk_one").val(getStartDefaultDate());
+        $("#end_date-count_prk_one").val(getEndDefaultDate());
+
+        $("#start_date-trans_prk_one").val(getStartDefaultDate());
+        $("#end_date-trans_prk_one").val(getEndDefaultDate());
+
+        let prkReports = new PrkReports();
+        
+        prkReports.getAllParkometerDevices('prk_list-count_prk_one');
+        prkReports.getParkometerTransactionType('type_list-count_prk_one');
+
+        prkReports.getAllParkometerDevices('prk_list-trans_prk_one');
+        prkReports.getParkometerTransactionType('type_list-trans_prk_one');
+        
+
+        prkReports.countAllParkometerTransactions();   
+
+        prkReports.countAllDevicesParkometerTransactions();
+
+        prkReports.countOneDeviceParkometerTransactions();   
+
+        prkReports.showOneDeviceParkometerTransactions();
+    }
+</script>
+
+
+
+
+
+{% include "front/footer.html" with navigations=navigations %}

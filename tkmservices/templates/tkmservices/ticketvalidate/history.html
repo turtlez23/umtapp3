@@ -1,0 +1,43 @@
+{% include "front/header.html" with title=title navigations=navigations back=back %}
+{% load static %}
+
+<script src={% static 'js/reports/config.js' %} ></script>
+<script src={% static 'js/reports/ExportReports.js' %}></script>
+<script src={% static 'js/reports/Reports.js' %}></script>
+<script src={% static 'js/tkmservices/reports/impl/ticketvalidate/TicketValidateHistory.js' %}></script>
+
+<div class="tab">
+    <button class="tablinks" 
+        onclick="openTab(event, 'tab-card_ticket_history')">
+        Historia skasowań
+    </button>
+</div>
+<div id="tab-card_ticket_history" class="tabcontent active" style="display: block;">
+    <p>Historia skasowan</p>
+    <div>
+        <label for="duplicate-card_ticket_history">Czy liczyć duplikaty:</label>
+        <input id="duplicate-card_ticket_history" type="checkbox"/>
+        <label for="card-card_ticket_history">Numer karty:</label>
+        <input id="card-card_ticket_history" type="text"/>
+
+        <label for="start_date-card_ticket_history">Data od:</label>
+        <input id="start_date-card_ticket_history" type="date"/>        
+        <label for="end_date-card_ticket_history">Data do:</label>
+        <input id="end_date-card_ticket_history" type="date"/>
+        <button id="btn-card_ticket_history">Pobierz</button>
+    </div>
+    <div id="result-card_ticket_history"></div>
+</div>
+<script>
+    $(document).ready(init);
+    function init(){
+        $("#start_date-card_ticket_history").val(getStartDefaultDate());
+        $("#end_date-card_ticket_history").val(getEndDefaultDate());
+
+        let ticketValidateHistory = new TicketValidateHistory();
+        ticketValidateHistory.ticketValidateHistory();
+    }
+</script>
+
+
+{% include "front/footer.html" with navigations=navigations %}

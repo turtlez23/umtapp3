@@ -1,0 +1,9 @@
+photos
+myenv
+logs
+__init__.py
+__pycache__
+migrations
+static
+settings.py
+manage.py

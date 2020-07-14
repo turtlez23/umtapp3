@@ -1,0 +1,88 @@
+{% include "front/header.html" with title=title navigations=navigations back=back %}
+<h1 style="color:red;text-align:center" id="error">{{error}}</h1>
+<div class="tab">
+    <button class="tablinks active" 
+        onclick="openTab(event, 'tab-manual')">
+        Manual
+    </button>
+    <button class="tablinks" 
+        onclick="openTab(event, 'tab-serial')">
+        Serial
+    </button>
+</div>
+
+<div id="tab-manual" class="tabcontent" style="display: block;">
+    <p>Manualny eksport pdf - aby odświerzyć listę zdjęć odświerz stronę - nie jest to wymagane do poprawnego działania</p>
+    <form method="GET" action="/api/v1/tkmservices/printcard/tkmPdfExport">
+        <label for="name">Imię:</label>
+        <input id="name" name="name" type="text" autocomplete="on" value="{{person.name}}"/>
+
+        <label for="surname">Nazwisko:</label>
+        <input id="surname" name="surname" type="text" autocomplete="on" value="{{person.surname}}"/>
+
+        <label for="id">Pesel:</label>
+        <input id="id" name="id" type="text" list="photos" autocomplete="off" value="{{person.id}}"/>
+        <datalist id="photos">
+            {% for photo in photos %}
+                <option value="{{photo}}">
+            {% endfor %}
+        </datalist>
+        
+        <label for="text">Text 2 linia (gdy długie nazwisko):</label>
+        <input id="text" name="text" type="text" value="{{person.text}}" />
+
+        <button id='btn-manual' type="submit">Export</button>
+    </form>
+</div>
+
+
+
+
+<div id="tab-serial" class="tabcontent">
+    <p>Seryjny eksport pdf</p>
+    <div>
+        <form method="GET" action="/api/v1/tkmservices/printcard/tkmPdfMultipleExport">
+            <input type='hidden' value='False' name='variant'>
+            <label for="variant-serial">Czy Premium</label>
+            <input id="variant-serial" name="variant" type="checkbox" value='True' checked/><br/>
+            <label for="online-serial">Czy online:</label>
+            <input type='hidden' value='False' name='online'>
+            <input id="online-serial" name="online" type="checkbox"/><br />
+            <label for="start_date-serial">Data od:</label>
+            <input id="start_date-serial" name="startdate" type="date"/>
+            <label for="end_date-serial">Data do:</label>
+            <input id="end_date-serial" name="enddate" type="date"/>
+            <button id="btn-serial">Pobierz</button>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(init);
+    function init(){
+        $("#start_date-serial").val(getStartDefaultDate());
+        $("#end_date-serial").val(getEndDefaultDate());
+
+        $('#btn-manual').click(()=>{ $('#error').html('')
+            let uri = window.location.toString();
+            if (uri.indexOf("?") > 0) {
+                var clean_uri = uri.substring(0, uri.indexOf("?"));
+                window.history.replaceState({}, document.title, clean_uri);
+            } 
+        });
+        $('#btn-serial').click(()=>{ $('#error').html('')
+            let uri = window.location.toString();
+            if (uri.indexOf("?") > 0) {
+                var clean_uri = uri.substring(0, uri.indexOf("?"));
+                window.history.replaceState({}, document.title, clean_uri);
+            } 
+        });
+    }
+</script>
+
+
+
+
+
+{% include "front/footer.html" with navigations=navigations %}

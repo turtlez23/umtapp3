@@ -1,0 +1,149 @@
+{% include "front/header.html" with title=title navigations=navigations back=back %}
+{% load static %}
+
+<script src={% static 'js/reports/config.js' %} ></script>
+<script src={% static 'js/reports/ExportReports.js' %}></script>
+<script src={% static 'js/reports/Reports.js' %}></script>
+<script src={% static 'js/tkmservices/reports/impl/ticketvalidate/TicketValidateReports.js' %}></script>
+<script src={% static 'js/tkmservices/reports/impl/ticketvalidate/TicketValidateSGReports.js' %}></script>
+
+<div class="tab">
+    <button class="tablinks" 
+        onclick="openTab(event, 'tab-ticket')">
+        OGÓLNA
+    </button>
+    <button class="tablinks" 
+        onclick="openTab(event, 'tab-ticket_variant')">
+        Z podziałem PREMIUM/STANDARD
+    </button>
+    <button class="tablinks active"
+        onclick="openTab(event, 'tab-ticket_sg_client')">
+        Z grupami spolecznymi - klient
+    </button>
+    <button class="tablinks" 
+        onclick="openTab(event, 'tab-ticket_sg')">
+        Z grupami spolecznymi - skasowanie
+    </button>
+</div>
+<div id="tab-ticket" class="tabcontent">
+    <p>Liczba skasowan dla siebie oraz wspolpasazerow (lacznie).</p>
+    <div>
+        <label for="duplicate-ticket">Czy liczyć duplikaty:</label>
+        <input id="duplicate-ticket" type="checkbox"/>
+        <label for="transfered-ticket">Czy przesiadkowe:</label>
+        <input id="transfered-ticket" type="checkbox"/>
+
+        <label for="start_date-ticket">Data od:</label>
+        <input id="start_date-ticket" type="date"/>        
+        <label for="end_date-ticket">Data do:</label>
+        <input id="end_date-ticket" type="date"/>
+        <button id="btn-ticket">Pobierz</button>
+    </div>
+    <div id="result-ticket"></div>
+</div>
+
+<div id="tab-ticket_variant" class="tabcontent">
+    <p>Liczba skasowan dla siebie oraz wspolpasazerow(lacznie) z 
+        podziałem PREMIUM/STANDARD.</p>
+    <div>
+        <label for="duplicate-ticket_variant">Czy liczyć duplikaty:</label>
+        <input id="duplicate-ticket_variant" type="checkbox"/>
+        <label for="transfered-ticket_variant">Czy przesiadkowe:</label>
+        <input id="transfered-ticket_variant" type="checkbox"/>
+        <label for="premium-ticket_variant">Czy PREMIUM:</label>
+        <input id="premium-ticket_variant" type="checkbox"/>
+
+        <label for="start_date-ticket_variant">Data od:</label>
+        <input id="start_date-ticket_variant" type="date"/>
+        <label for="end_date-ticket_variant">Data do:</label>
+        <input id="end_date-ticket_variant" type="date"/>
+        <button id="btn-ticket_variant">Pobierz</button>
+    </div>
+    <div id="result-ticket_variant"></div>
+</div>
+
+<div id="tab-ticket_sg_client" class="tabcontent" style="display: block;">
+    <p>Liczba skasowan dla siebie, wspolpasazerow z grupami 
+        spolecznymi pobranymi z tabeli klientow oraz linia.</p>
+    <div>
+        <label for="duplicate-ticket_sg_client">Czy liczyć duplikaty:</label>
+        <input id="duplicate-ticket_sg_client" type="checkbox"/>
+        <label for="transfered-ticket_sg_client">Czy przesiadkowe:</label>
+        <input id="transfered-ticket_sg_client" type="checkbox"/>
+        <label for="premium-ticket_sg_client">Czy PREMIUM:</label>
+        <input id="premium-ticket_sg_client" type="checkbox"/>
+
+        <label for="start_date-ticket_sg_client">Data od:</label>
+        <input id="start_date-ticket_sg_client" type="date"/>        
+        <label for="end_date-ticket_sg_client">Data do:</label>
+        <input id="end_date-ticket_sg_client" type="date"/>
+        
+        <label for="grouping-ticket_sg_client">Grupowanie</label>
+        <select id="grouping-ticket_sg_client">
+            <option value="LINE+BUSSTOP_COUNT">Linia + Liczba przystankow</option>
+            <option value="LINE">Linia</option>
+            <option value="BUSSTOP_COUNT">Liczba przystankow</option>
+            <option value="DISABLED">Brak</option>
+        </select>
+        <button id="btn-ticket_sg_client">Pobierz</button>
+    </div>
+    <div id="result-ticket_sg_client"></div>
+</div>
+
+<div id="tab-ticket_sg" class="tabcontent">
+    <p>Liczba skasowan dla siebie, wspolpasazerow z grupami 
+        spolecznymi pobranymi beposrednio z tabeli skasowan oraz linia.</p>
+    <div>
+        <label for="duplicate-ticket_sg">Czy liczyć duplikaty:</label>
+        <input id="duplicate-ticket_sg" type="checkbox"/>
+        <label for="transfered-ticket_sg">Czy przesiadkowe:</label>
+        <input id="transfered-ticket_sg" type="checkbox"/>
+        <label for="premium-ticket_sg">Czy PREMIUM:</label>
+        <input id="premium-ticket_sg" type="checkbox"/>
+
+        <label for="start_date-ticket_sg">Data od:</label>
+        <input id="start_date-ticket_sg" type="date"/>        
+        <label for="end_date-ticket_sg">Data do:</label>
+        <input id="end_date-ticket_sg" type="date"/>
+
+        <label for="grouping-ticket_sg">Grupowanie</label>
+        <select id="grouping-ticket_sg">
+            <option value="LINE+BUSSTOP_COUNT">Linia + Liczba przystankow</option>
+            <option value="LINE">Linia</option>
+            <option value="BUSSTOP_COUNT">Liczba przystankow</option>
+            <option value="DISABLED">Brak</option>
+        </select>
+        <button id="btn-ticket_sg">Pobierz</button>
+    </div>
+    <div id="result-ticket_sg"></div>
+</div>
+<script>
+    $(document).ready(init);
+    function init(){
+        $("#start_date-ticket").val(getStartDefaultDate());
+        $("#end_date-ticket").val(getEndDefaultDate());
+
+        $("#start_date-ticket_variant").val(getStartDefaultDate());
+        $("#end_date-ticket_variant").val(getEndDefaultDate());
+
+        $("#start_date-ticket_sg_client").val(getStartDefaultDate());
+        $("#end_date-ticket_sg_client").val(getEndDefaultDate());
+
+        $("#start_date-ticket_sg").val(getStartDefaultDate());
+        $("#end_date-ticket_sg").val(getEndDefaultDate());
+
+        let ticketvalidate = new TicketValidateReports();
+        ticketvalidate.myselfFellowCount();
+        ticketvalidate.myselfFellowWithVariantCount();
+
+        let ticketSGvalidate = new TicketValidateSGReports();
+        ticketSGvalidate.lineSocialGroupFromClientTableCount();
+        ticketSGvalidate.lineSocialGroupFromTpTableCount();
+    }
+</script>
+
+
+
+
+
+{% include "front/footer.html" with navigations=navigations %}
