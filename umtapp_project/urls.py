@@ -19,6 +19,7 @@ urlpatterns = [
 	path('tarnow_pl/', include('tarnow_pl.urls')),
 	path('tkmservices/', include('tkmservices.urls')),
 
+
     # API URLS    
 	    # TARNOW_PL
     path('api/v1/getDataFromTarnowPl/', api_tarnow_pl_views.getDataFromTarnowPl, name='getDataFromTarnowPl'),

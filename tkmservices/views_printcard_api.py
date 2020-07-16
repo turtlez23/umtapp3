@@ -15,7 +15,7 @@ from django.http import FileResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.datastructures import MultiValueDictKeyError
 
-from .views import isAutorized, castParamToBoolean, getVariantFromBooleanParam, getFilesList
+from .views import isAutorized, castParamToBoolean, getVariantFromBooleanParam, getFilesList, getResponseFromTkmWebServices
 
 import reportlab
 from reportlab.pdfgen import canvas
@@ -39,6 +39,36 @@ PHOTO_Y = 13*mm
 PHOTO_W = 13*mm
 PHOTO_H = 17*mm
 FOREIGNER_ID_LENGTH = len('2000-05-27')
+
+def tkmGetCustomerFormData(startDate, endDate, variant, online):          
+    # "CLOSED"        
+    # "TO_PERSONALIZE"
+    # "REJECTED"      
+    # "PERSONALIZED"  
+    # "NEW"           
+    url = settings.TKM_WEBSERVICE_ADDRESS + 'tkmGetCustomerRequest_to_personalize_' + settings.TKM_WEBSERVICE_VERSION
+    params = {
+        "queryParams":[{
+            "name": "online",
+            "value": str(online)},{
+            "name": "variant",
+            "value": str(variant)},{
+            "name": "startdate",
+            "value": startDate},{
+            "name": "enddate",
+            "value": endDate},{
+            "name": "key",
+            "value": settings.TKM_WEBSERVICES_AUTH_KEY}
+        ]
+    }
+    headers={'Content-type':'application/json', 'Accept':'application/json'}
+    req = requests.post(url=url, data=json.dumps(params), headers=headers, auth=(settings.TKM_WEBSERVICE_USER_LOGIN, settings.TKM_WEBSERVICE_USER_PASS))
+    return getResponseFromTkmWebServices(json.loads(req.content))
+    # reqJsonTMP = json.loads(req.content)
+    # reqJson ={}
+    # reqJson = reqJsonTMP['message'][0]
+    # reqJson['response'] = json.loads(reqJsonTMP['message'][0].get('response', '[]'))   
+    # return reqJson
 
 @login_required(login_url='/loginform/')
 def tkmGetPhotoList(request):
@@ -71,35 +101,6 @@ def tkmPdfExport(request):
                 '&surname='+str(surname)+'&id='+str(id)+'&text='+
                     str(text)+'&error=BŁĄD EKSPORTU - SPRAWDŹ ZDJĘCIE !! :'+str(id))
     return render(request, 'front/loginform.html', {'text':'Wymagane uprawnienia: '+ ', '.join(permisions), 'back': '/tkmservices'})
-
-def tkmGetCustomerFormData(startDate, endDate, variant, online):          
-    # "CLOSED"        
-    # "TO_PERSONALIZE"
-    # "REJECTED"      
-    # "PERSONALIZED"  
-    # "NEW"           
-    url = settings.TKM_WEBSERVICE_ADDRESS + 'tkmGetCustomerRequest_to_personalize_' + settings.TKM_WEBSERVICE_VERSION
-    params = {
-        "queryParams":[{
-            "name": "online",
-            "value": str(online)},{
-            "name": "variant",
-            "value": str(variant)},{
-            "name": "startdate",
-            "value": startDate},{
-            "name": "enddate",
-            "value": endDate},{
-            "name": "key",
-            "value": settings.TKM_WEBSERVICES_AUTH_KEY}
-        ]
-    }
-    headers={'Content-type':'application/json', 'Accept':'application/json'}
-    req = requests.post(url=url, data=json.dumps(params), headers=headers, auth=(settings.TKM_WEBSERVICE_USER_LOGIN, settings.TKM_WEBSERVICE_USER_PASS))
-    reqJsonTMP = json.loads(req.content)
-    reqJson ={}
-    reqJson = reqJsonTMP['message'][0]
-    reqJson['response'] = json.loads(reqJsonTMP['message'][0].get('response', '[]'))   
-    return reqJson
 
 @login_required(login_url='/loginform/')
 def tkmPdfMultipleExport(request):

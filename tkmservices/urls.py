@@ -11,6 +11,8 @@ urlpatterns = [
 	
 	path('printcard/', views.printCard, name='printcard'),
 
+	path('test/', views.test, name='test'),
+
 
 # nie zaimplementowane
     path('tkmservices/countcardandproposal/', views.main, name='countcardandproposal'),    
