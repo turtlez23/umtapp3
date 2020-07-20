@@ -189,12 +189,54 @@ def checkOnlineCustomerRequest():
     req = requests.post(url=url, data=json.dumps(params), headers=headers, auth=(settings.TKM_WEBSERVICE_USER_LOGIN, settings.TKM_WEBSERVICE_USER_PASS))
     return getResponseFromTkmWebServices(json.loads(req.content))
 
+def tkmCountDuplicateAndRegistrationCustomerRequest(startDate, endDate):
+    url = settings.TKM_WEBSERVICE_ADDRESS + 'tkmGetCustomerRequest_count_registration_and_duplicate_type_' + settings.TKM_WEBSERVICE_VERSION
+    params = {
+        "queryParams":[{
+            "name": "startdate",
+            "value": startDate},{
+            "name": "enddate",
+            "value": endDate},{
+            "name": "key",
+            "value": settings.TKM_WEBSERVICES_AUTH_KEY}
+        ]
+    }
+    headers={'Content-type':'application/json', 'Accept':'application/json'}
+    req = requests.post(url=url, data=json.dumps(params), headers=headers, auth=(settings.TKM_WEBSERVICE_USER_LOGIN, settings.TKM_WEBSERVICE_USER_PASS))
+    return getResponseFromTkmWebServices(json.loads(req.content))
 
-
-
-
-
+from datetime import datetime, timedelta
+def countBillingWeekDuplicateAndRegistrationCustomerRequest():    
+    startDate = datetime.now() - timedelta(days=7)
+    endDate = datetime.now() - timedelta(days=1)
+    startDateStr = startDate.strftime(settings.DATE_FORMAT)
+    endDateStr = endDate.strftime(settings.DATE_FORMAT)
+    jsonReq = tkmCountDuplicateAndRegistrationCustomerRequest(startDateStr, endDateStr)
+    jsonReq['date'] = {'start_date': startDateStr, 'end_date' : endDateStr}
+    # jsonReq['date']['start_date'] = startDateStr
+    # jsonReq['date']['end_date'] = endDateStr
+    return jsonReq
 
 def test(request):
-    test = checkOnlineCustomerRequest()
-    return HttpResponse({'test':test}, content_type='application/json')
+    pass
+    # reqJson = checkOnlineCustomerRequest()
+    # objs = reqJson['response']
+    # count = str(len(objs))    
+    # now = datetime.now()
+    # current_date = now.strftime(settings.DATE_FORMAT)
+    # fromAddress = settings.EMAIL_FROM_ADDRESS
+    # title = 'Ilość wniosków online na dzień '+ current_date
+    # html_message = '<h1>'+ title +':</h1><h2>'+ count +'</h2>'
+    # userList = settings.ONLINE_CUSTOM_REQUEST_MAIL_LIST
+    # if not count:
+    #     html_message += '<h2>BRAK WNIOSKÓW ONLINE NA DZIEŃ: '+ current_date +'</h2>'
+    # else:
+    #     for obj in objs:
+    #         html_message += '<p>'+ obj['id'] +'</p>'
+    
+    # sendStatus = sendEmail(title, fromAddress, userList, html_message)
+    # if sendStatus:
+    #     logger.info('WYSLANO EMAIL: Liczba['+ str(sendStatus) +'], OD: '+ fromAddress +', DO: '+ ', '.join(userList) +',Tresc: '+ html_message)
+    # else:
+    #     logger.error('NIE WYSLANO EMAIL: OD: '+ fromAddress +', DO: '+ ', '.join(userList) +',Tresc: '+ html_message)
+    # return HttpResponse({'test':html_message}, content_type='application/json')
