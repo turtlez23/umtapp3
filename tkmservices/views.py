@@ -24,13 +24,9 @@ MENU_NAVIGATION = [
         'describe':'Rozliczenia transakcji miesięcznych w kasownikach autobusowych - Zarząd Dróg i Komunikacji Miejskiej'},
     {'link':'ticketvalidatehistory', 'name':'Historia skasowań', 'describe':'Historia skasowań dla podanej karty'},
     {'link':'printcard', 'name':'Drukowanie TKM', 'describe' :'Drukowanie kart miejskich'},
-    {'link':'countcardandproposal', 'name':'Liczba kart i wniosków',
+    {'link':'citycardstatistic', 'name':'Statystyka karty miejskiej',
         'describe':'W budowie...'},
     {'link':'checkblockcard', 'name':'Sprawdzenie zablokowanej karty',
-        'describe':'W budowie...'},
-    {'link':'onlineproposal', 'name':'Wnioski online',
-        'describe':'W budowie...'},
-    {'link':'citycardstatistic', 'name':'Statystyka karty miejskiej',
         'describe':'W budowie...'},
 ]
 #def isAuthenticated(user):    

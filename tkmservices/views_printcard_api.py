@@ -32,9 +32,11 @@ WIDTH = 86*mm
 HEIGHT = 54*mm
 TEXT_X = 10*mm
 TEXT_Y = 42*mm
+A4_TEXT_X = TEXT_X
+A4_TEXT_Y = 290*mm
 FONT_SIZE = 10
 FONT_H = 4*mm
-PHOTO_X = 64*mm
+PHOTO_X = 65*mm
 PHOTO_Y = 13*mm
 PHOTO_W = 13*mm
 PHOTO_H = 17*mm
@@ -146,6 +148,7 @@ def pdfExport(name, surname, id, title, text):
     # Standard const params
     bufferedPdf = io.BytesIO()
     p = canvas.Canvas(bufferedPdf)
+    p.setPageSize((WIDTH, HEIGHT))
     p.setTitle(title)
     data = {'name': name, 'surname': surname, 'id': id, 'text': ''}
     generateOnePagePdf(p, data, id)
@@ -174,8 +177,8 @@ def pdfMultiPagesExport(title, data):
         else:
             lostPhotos.append(id +'.jpg - '+ d['name'] +' '+ d['surname'])
     p.setPageSize((210*mm, 297*mm))
-    x = TEXT_X
-    y = 290*mm
+    x = A4_TEXT_X
+    y = A4_TEXT_Y
     lostPhotos.append('Ilość: '+ str(len(lostPhotos)))
     for photo in lostPhotos:
         p.setFont("Arial-bold", FONT_SIZE)
