@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*- 
 from django.shortcuts import render, redirect
+
+from django.conf import settings
+
 MENU_NAVIGATION = [
     {'link':'tarnow_pl', 'name':'Tarnow_pl - narzędzia', 
         'describe' : 'Narzędzia dodatkowe do edycji strony tarnow.pl'},
@@ -24,7 +27,7 @@ from django.contrib.auth import authenticate, login, logout
 
 def loginForm(request):
     return render(request, 'front/loginform.html', 
-        {'title' : 'LOGOWANIE', 'navigations' : MENU_NAVIGATION, 'back' : '/', 'redirectpage' : request.META['HTTP_REFERER']})
+        {'title' : 'LOGOWANIE', 'navigations' : MENU_NAVIGATION, 'back' : '/', 'redirectpage' : request.META.get('HTTP_REFERER', settings.START_PAGE_URL)})
 
 # Autenticate API
 def logOut(request):
