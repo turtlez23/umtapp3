@@ -132,6 +132,10 @@ def getPhotoName(id):
         return 'błąd id'
     if id.find('.jpg') == -1:
         id += '.jpg'
+    if id.find('.jpeg') == -1:
+        id += '.jpeg'
+    if id.find('.png') == -1:
+        id += '.png'
     return settings.PHOTO_DIR  + id
 
 def generateOnePagePdf(p, data, id):
